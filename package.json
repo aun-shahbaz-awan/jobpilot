@@ -1,0 +1,50 @@
+{
+  "name": "jobpilot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal job-hunting CRM: finds matching jobs, tailors applications, applies after your approval, and tells you which skills to learn next.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "setup": "tsx scripts/migrate.ts && tsx scripts/seed.ts",
+    "sync": "tsx scripts/sync.ts",
+    "apply": "tsx runner/apply.ts",
+    "apply:install": "playwright install chromium",
+    "test": "tsx --test tests/*.test.ts",
+    "predev": "tsx scripts/migrate.ts",
+    "demo": "tsx scripts/demo.ts",
+    "dev:demo": "DATABASE_URL=file:./data/demo.db next dev --port 3001"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@libsql/client": "^0.18.0",
+    "drizzle-orm": "^0.45.4",
+    "lucide-react": "^1.61.0",
+    "mammoth": "^1.13.0",
+    "next": "^16.4.3",
+    "nodemailer": "^10.2.1",
+    "pdf-parse": "^2.4.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.6.5",
+    "@types/nodemailer": "^8.0.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "dotenv": "^18.0.9",
+    "drizzle-kit": "^0.31.11",
+    "playwright": "^1.64.1",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

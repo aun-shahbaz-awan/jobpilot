@@ -1,0 +1,163 @@
+@import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --paper: #edf0f4;
+  --surface: #ffffff;
+  --sunken: #e4e8ee;
+  --line: #d6dce5;
+  --ink: #18233a;
+  --ink-2: #4a5670;
+  --ink-3: #7a859b;
+  --cobalt: #2e57e8;
+  --cobalt-ink: #ffffff;
+  --cobalt-soft: #e3e9fd;
+  --good: #14936c;
+  --good-soft: #dcf2ea;
+  --mid: #c27d00;
+  --mid-soft: #fbefd5;
+  --low: #9aa4b5;
+  --danger: #c8372d;
+  --danger-soft: #f8e1df;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1524;
+    --surface: #172036;
+    --sunken: #121a2c;
+    --line: #26324b;
+    --ink: #e6ebf4;
+    --ink-2: #a3aec3;
+    --ink-3: #6f7b93;
+    --cobalt: #7c9bff;
+    --cobalt-ink: #0f1524;
+    --cobalt-soft: #1e2a4d;
+    --good: #3cc497;
+    --good-soft: #143529;
+    --mid: #f0b53a;
+    --mid-soft: #3a2e12;
+    --low: #56627a;
+    --danger: #ff7a6e;
+    --danger-soft: #3d1b1a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #0f1524;
+  --surface: #172036;
+  --sunken: #121a2c;
+  --line: #26324b;
+  --ink: #e6ebf4;
+  --ink-2: #a3aec3;
+  --ink-3: #6f7b93;
+  --cobalt: #7c9bff;
+  --cobalt-ink: #0f1524;
+  --cobalt-soft: #1e2a4d;
+  --good: #3cc497;
+  --good-soft: #143529;
+  --mid: #f0b53a;
+  --mid-soft: #3a2e12;
+  --low: #56627a;
+  --danger: #ff7a6e;
+  --danger-soft: #3d1b1a;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-cobalt: var(--cobalt);
+  --color-cobalt-ink: var(--cobalt-ink);
+  --color-cobalt-soft: var(--cobalt-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-mid: var(--mid);
+  --color-mid-soft: var(--mid-soft);
+  --color-low: var(--low);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--cobalt-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Shared control styles */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-sunken disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply border-transparent bg-cobalt text-cobalt-ink hover:bg-cobalt hover:brightness-110;
+  }
+  .btn-ghost {
+    @apply border-transparent bg-transparent hover:bg-sunken;
+  }
+  .btn-danger {
+    @apply text-danger;
+  }
+  .field {
+    @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-3 focus:border-cobalt focus:outline-none;
+  }
+  .label {
+    @apply mb-1 block text-sm font-medium text-ink-2;
+  }
+  .panel {
+    @apply rounded-2xl border border-line bg-surface;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+}
