@@ -1,8 +1,8 @@
 /**
  * Apply runner. Sends the applications you approved in the Review page.
  *
- *   npm run apply            fill each form, then wait for you to check and submit
- *   npm run apply -- --dry   fill forms but never submit, and change nothing in the database
+ *   pnpm run apply           fill each form, then wait for you to check and submit
+ *   pnpm run apply --dry     fill forms but never submit, and change nothing in the database
  *
  * Form applications open in a real browser window on your computer. Email applications go out
  * through your SMTP account. It never bypasses CAPTCHAs, never ticks consent boxes for you,
@@ -113,7 +113,7 @@ async function runForms(items: { app: Application; job: Job }[], profile: Awaite
   try {
     ({ chromium } = await import("playwright"));
   } catch {
-    console.error("Playwright isn't installed. Run: npm install && npm run apply:install");
+    console.error("Playwright isn't installed. Run: pnpm install && pnpm run apply:install");
     return;
   }
   // A persistent profile keeps cookies, so sites you sign in to once stay signed in.
@@ -121,7 +121,7 @@ async function runForms(items: { app: Application; job: Job }[], profile: Awaite
     .launchPersistentContext(resolve("data/browser"), { headless: false, viewport: { width: 1280, height: 900 } })
     .catch(async (e: Error) => {
       if (/Executable doesn't exist/i.test(e.message)) {
-        console.error("The browser isn't installed yet. Run: npm run apply:install");
+        console.error("The browser isn't installed yet. Run: pnpm run apply:install");
         process.exit(1);
       }
       throw e;

@@ -1,0 +1,14 @@
+name: Feature or job source request
+description: Suggest an improvement, a job board, or an applicant tracking system to support
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it help your job search?

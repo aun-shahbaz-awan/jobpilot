@@ -3,7 +3,35 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Personal job-hunting CRM: finds matching jobs, tailors applications, applies after your approval, and tells you which skills to learn next.",
+  "description": "Open-source, self-hosted job search CRM: finds matching jobs, drafts tailored applications, fills application forms after your approval, tracks your pipeline and shows which skills to learn next.",
+  "keywords": [
+    "job-search",
+    "job-tracker",
+    "job-application-tracker",
+    "crm",
+    "auto-apply",
+    "cover-letter",
+    "resume",
+    "skill-gap-analysis",
+    "remote-jobs",
+    "nextjs",
+    "typescript",
+    "playwright",
+    "ai"
+  ],
+  "homepage": "https://github.com/aun-shahbaz-awan/jobpilot#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aun-shahbaz-awan/jobpilot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aun-shahbaz-awan/jobpilot/issues"
+  },
+  "license": "MIT",
+  "author": "Aun Shahbaz Awan",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

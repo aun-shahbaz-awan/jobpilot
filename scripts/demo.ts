@@ -1,6 +1,6 @@
 /**
  * Fills a separate demo database (data/demo.db) with sample jobs so you can explore the app
- * without touching your real data:  npm run demo  then  npm run dev:demo
+ * without touching your real data:  pnpm run demo  then  pnpm run dev:demo
  */
 import { mkdirSync, rmSync } from "node:fs";
 
@@ -52,4 +52,4 @@ await setJobStatus(top[2].id, "saved");
 await markApplied(top[3].id, "on the company site");
 await setJobStatus(top[4].id, "interview");
 await logEvent(top[4].id, "note", "Phone screen with the hiring manager on Monday");
-console.log("\nDemo data ready. Start it with: npm run dev:demo");
+console.log("\nDemo data ready. Start it with: pnpm run dev:demo");
