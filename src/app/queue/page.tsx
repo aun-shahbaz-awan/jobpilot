@@ -64,7 +64,7 @@ export default async function Review() {
           <>
             <div className="panel mb-3 bg-sunken p-4 text-sm">
               <p className="font-medium">Send them from your computer:</p>
-              <pre className="mt-2 overflow-x-auto rounded-lg bg-surface p-3 text-[13px]">npm run apply</pre>
+              <pre className="mt-2 overflow-x-auto rounded-lg bg-surface p-3 text-[13px]">pnpm run apply</pre>
               <p className="mt-2 text-ink-2">
                 A browser opens, fills each form with your profile, CV and this draft, and {settings.apply.autoSubmit ? "submits when the form is complete and there's no CAPTCHA." : "stops before Submit so you can check and click it yourself."} You can change this in Settings → Applying.
               </p>

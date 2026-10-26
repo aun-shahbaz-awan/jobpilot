@@ -1,116 +1,163 @@
+<div align="center">
+
 # JobPilot
 
-A personal job-hunting CRM. It pulls jobs from free job-board APIs and company career pages, scores each one against your skills and markets, drafts tailored applications for you to approve, sends the approved ones from your computer, tracks everything in a pipeline, and tells you which skills to learn next to qualify for more of the jobs you want.
+**An open-source, self-hosted job search CRM.** It finds jobs that match your skills, drafts tailored cover letters, fills application forms after you approve them, tracks every application in a pipeline, and tells you which skills to learn next to get hired.
 
-Built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, Drizzle ORM and libSQL (SQLite locally, Turso when deployed).
+[![CI](https://github.com/aun-shahbaz-awan/jobpilot/actions/workflows/ci.yml/badge.svg)](https://github.com/aun-shahbaz-awan/jobpilot/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-2e57e8.svg)](LICENSE)
+![Next.js 16](https://img.shields.io/badge/Next.js-16-18233a?logo=nextdotjs)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-2e57e8?logo=typescript&logoColor=white)
 
-## Quick start (local)
+![JobPilot dashboard showing drafts to review, new matches, the application funnel and skills to learn next](docs/screenshots/today.webp)
+
+</div>
+
+## Why JobPilot
+
+Job hunting is a funnel, and most tools only cover one part of it. Job boards show you listings, trackers record what you applied to, and AI writers produce generic cover letters. JobPilot connects the whole loop in one app you own:
+
+1. **Find**: pulls fresh listings from free job-board APIs and the career pages of companies you care about.
+2. **Match**: scores every job against your real skills, location and seniority, and explains the score.
+3. **Apply**: drafts a tailored application, waits for your approval, then fills the form or sends the email for you.
+4. **Track**: a CRM pipeline with notes, contacts, timeline and follow-up reminders.
+5. **Improve**: works out which missing skills would qualify you for the most jobs, and plans how to learn them.
+
+It runs on your own machine with a local SQLite database, works without any AI, and costs nothing to run. Add an AI key when you want sharper reviews and better-written letters.
+
+## Features
+
+### Job matching that explains itself
+Every job gets a 0–100 match score: skills (55%), role (17%), location (15%), seniority (8%) and freshness (5%). Around 120 skills are recognised from the posting and split into required and nice-to-have; related skills earn partial credit (Vue counts a little toward React). It knows whether you can actually apply: remote roles open worldwide or to your country score full, region-locked roles you're outside of are capped, and postings that need a language you don't speak are flagged.
+
+![Matches page with match scores, skill meters and missing skills for each job](docs/screenshots/matches.webp)
+
+![Job detail page explaining why a job scored 92, with matched and missing skills](docs/screenshots/job-detail.webp)
+
+### Application drafts you approve
+Select jobs and draft applications in one click. Each draft has a cover letter, the CV highlights that fit the job, and answers to screening questions. Edit anything, then approve. Nothing is sent without your approval.
+
+![Review page with an editable cover letter and highlights](docs/screenshots/review.webp)
+
+### An apply runner that fills real forms
+`pnpm run apply` opens a real browser and fills Greenhouse, Lever, Ashby and Workable application forms with your details, CV and the approved draft. Email applications go out through your own SMTP account with your CV attached. It never solves CAPTCHAs, never ticks consent boxes for you, and never invents answers: anything it can't fill is left for you to finish.
+
+### Skill-gap analysis
+The Skills page re-scores every relevant job as if you had learned each missing skill, then ranks skills by how many jobs they would unlock, their demand and their weekly trend. With AI on, it writes a learning plan with a portfolio project for each skill.
+
+![Skills page ranking skills to learn by jobs unlocked and demand](docs/screenshots/skills.webp)
+
+### A pipeline for everything you've applied to
+Drag cards from Saved to Applied, Interviewing and Offer. Applying sets a follow-up date automatically.
+
+![Kanban pipeline of job applications](docs/screenshots/pipeline.webp)
+
+### Also
+- Light and dark themes, keyboard accessible, works on mobile.
+- Optional AI with **Claude, OpenAI or Ollama (local, free)**, a model per task, cached results and a monthly budget cap.
+- Password lock and a scheduled sync for when you deploy it.
+
+## Job sources
+
+| Source | Coverage | Polling limit respected |
+| --- | --- | --- |
+| [Remotive](https://remotive.com) | Remote software jobs | Every 6 h |
+| [Remote OK](https://remoteok.com) | Remote developer jobs | Every 6 h |
+| [Himalayas](https://himalayas.app) | Remote jobs searched with your keywords | Every 12 h |
+| [Jobicy](https://jobicy.com) | Remote engineering jobs | Every 4 h |
+| [Arbeitnow](https://www.arbeitnow.com) | Germany and Europe, including visa-sponsored roles | Every 4 h |
+| Greenhouse, Lever, Ashby | Career pages of companies on your watchlist | Every 3 h |
+
+Listings link back to the original posting as each source's terms require. LinkedIn and Indeed are deliberately not scraped: their terms forbid it and they suspend accounts that automate them.
+
+## Quick start
+
+Requires Node.js 20 or newer and [pnpm](https://pnpm.io).
 
 ```bash
-npm install
-cp .env.example .env        # optional: add API keys, SMTP for email applications
-npm run setup               # creates the database and a starter profile
-npm run dev                 # http://localhost:3000
+git clone https://github.com/aun-shahbaz-awan/jobpilot.git
+cd jobpilot
+pnpm install
+cp .env.example .env    # optional: AI keys, SMTP for email applications
+pnpm run setup          # creates the database and a starter profile
+pnpm run dev            # http://localhost:3000
 ```
 
 Then:
 
-1. **Profile**: upload your CV (PDF or DOCX), add email and phone, and check your skill levels. Levels drive the match score.
-2. Click **Find new jobs** in the sidebar.
+1. **Profile**: upload your CV (PDF or DOCX), add your contact details and check your skill levels. Levels drive the match score.
+2. Click **Find new jobs**.
 3. **Matches**: select good jobs and choose **Draft applications**.
-4. **Review**: read and edit each draft, then **Approve**.
-5. In a terminal: `npm run apply:install` once, then `npm run apply` whenever you have approved applications.
+4. **Review**: edit and approve the drafts.
+5. Run `pnpm run apply:install` once, then `pnpm run apply` to send what you approved. Try `pnpm run apply --dry` first to watch it fill forms without submitting.
 
-Want to look around first without touching real data? `npm run demo` then `npm run dev:demo` (port 3001, sample jobs).
+Want to look around without your own data? Run `pnpm run demo`, then `pnpm run dev:demo` (sample jobs on port 3001).
 
-## How it works
+## Tech stack
 
-### Where jobs come from
-
-| Source | What it adds | Limits respected |
+| Layer | Choice | Why |
 | --- | --- | --- |
-| Remotive | Remote software jobs | Max one fetch per 6 h, as Remotive asks |
-| Remote OK | Remote dev jobs | Every 6 h |
-| Himalayas | Remote jobs, searched with your terms | Every 12 h (data refreshes daily); apply links go through Himalayas as its terms require |
-| Jobicy | Remote engineering jobs, last 7 days | Every 4 h |
-| Arbeitnow | Germany and Europe, including visa-sponsored roles | Every 4 h |
-| Greenhouse, Lever, Ashby | Direct company career pages you add to a watchlist | Every 3 h |
+| Framework | Next.js 16 (App Router, Server Components, Server Actions) | Pages and backend in one TypeScript codebase, no separate API |
+| UI | React 19, Tailwind CSS 4, Lucide icons | Fast to build, themable with CSS variables |
+| Database | SQLite via libSQL; Turso when hosted | A single local file now, the same code against a free hosted database later |
+| ORM | Drizzle ORM and Drizzle Kit | Type-safe SQL and versioned migrations |
+| Automation | Playwright | Drives a real browser to fill application forms |
+| Email | Nodemailer | Sends email applications through your SMTP account |
+| Documents | pdf-parse, Mammoth | Reads text from PDF and Word CVs |
+| AI | Anthropic, OpenAI or Ollama over plain HTTP | Switchable per task, no vendor lock-in |
+| Tests | Node's built-in test runner with tsx | Unit tests plus a full sync against recorded API responses |
 
-Add companies in **Settings → Sources** by slug: `boards.greenhouse.io/<slug>`, `jobs.lever.co/<slug>`, `jobs.ashbyhq.com/<slug>`. A wrong slug shows as "board not found" next to the source. LinkedIn and Indeed aren't scraped: both forbid it and suspend accounts that automate them.
+## AI costs
 
-Jobs are de-duplicated across sources, and new jobs scoring under 20 aren't stored, so the database stays focused.
+AI is optional. The matcher, templates and skill analysis are free and run offline. With AI on, the defaults use the cheapest capable model:
 
-### The match score (free, no AI)
-
-Every job gets a 0 to 100 score with a visible breakdown:
-
-- **Skills (55%)**: about 120 skills are recognised from the posting, split into required and nice-to-have. Your level counts, and related skills give partial credit (Vue counts a little toward React, Ethers.js toward viem).
-- **Role (17%)**: title words from Settings → Search.
-- **Location (15%)**: can you actually apply? Remote-worldwide and roles open to the UAE score full; Europe-only remote roles score lower (often need EU residency); jobs in a country you added as a market (Germany by default) score well; US-only roles are capped at 35.
-- **Seniority (8%)** and **freshness (5%)**.
-- Postings that need German (stated, or written in German) are capped at 45 until you add German to your languages.
-
-Edit `src/lib/skills/taxonomy.ts` to add skills or aliases.
-
-### Skill advice
-
-The Skills page looks at every role you could realistically apply for and ranks missing skills by how many jobs each one would push over your threshold (re-scoring them with that skill at a solid level), then by demand and trend. It also shows your strengths that are in demand and coverage by area. With AI on, it can write a learning plan with a portfolio project per skill.
-
-### Applying
-
-Nothing is sent without your approval.
-
-- **Drafts** use AI if it's on and within budget, otherwise a template built from your profile and the skills you share with the job. Every draft is editable.
-- **Form applications** (Greenhouse, Lever, Ashby, Workable): `npm run apply` opens a real browser, fills your details, uploads your CV, pastes the cover letter and answers questions from your answer bank. By default it stops so you can check and click Submit; turn on **Let the runner click Submit** in Settings to have it submit forms that are complete and have no CAPTCHA. It never solves CAPTCHAs, never ticks consent boxes, and never makes up answers.
-- **Email applications** (when a posting asks you to email a CV) are sent through your SMTP account with your CV attached.
-- **Everything else** (job-board pages, unknown sites) lands in "Finish these yourself" with a copy button for the cover letter.
-
-`npm run apply -- --dry` fills forms without submitting or changing anything.
-
-### AI (optional, switchable)
-
-Settings → AI lets you pick **Off**, **Claude**, **OpenAI** or **Ollama** (free, local), and choose a model per task. Defaults are set for the lowest cost:
-
-| Task | Default | Rough cost |
+| Task | Default model | Approximate cost |
 | --- | --- | --- |
-| Job review | Claude Haiku 5.5 | ~$0.0005 per job |
-| Application writing | Claude Haiku 5.5 (switch to Sonnet 5.5 for better letters) | ~$0.001 (Sonnet ~$0.02) |
+| Job review (second opinion on fit) | Claude Haiku 5.5 | ~$0.0005 per job |
+| Application writing | Claude Haiku 5.5 (Sonnet 5.5 writes better) | ~$0.001 (Sonnet ~$0.02) |
 | Learning plan, CV reading | Claude Haiku 5.5 | under a cent |
 
-Results are cached, so you never pay twice for the same request, and a monthly budget cap stops paid calls (templates take over). A Claude Pro subscription doesn't include API usage; get an API key at console.anthropic.com.
+Responses are cached and a monthly budget cap stops paid calls. Ollama runs models on your own machine for free.
 
-## Deploying to Netlify (free)
+## Deploying (free)
 
-1. Create a free database at [turso.tech](https://turso.tech) and note its URL and token.
-2. Point your local `.env` at it (`DATABASE_URL`, `DATABASE_AUTH_TOKEN`) and run `npm run setup` once to create the tables. To keep your local data, export and import it with the Turso CLI.
-3. Push the project to GitHub and import it in Netlify. Set environment variables: `DATABASE_URL`, `DATABASE_AUTH_TOKEN`, `APP_PASSWORD` (locks the site), `CRON_SECRET`, plus any AI keys.
-4. The included scheduled function (`netlify/functions/scheduled-sync.mts`) syncs the most overdue source every 30 minutes, staying inside Netlify's function time limits.
-5. Keep running `npm run apply` on your Mac. With `.env` pointing at Turso, it sends what you approve on the deployed site.
+1. Create a free database at [turso.tech](https://turso.tech).
+2. Put `DATABASE_URL` and `DATABASE_AUTH_TOKEN` in `.env` and run `pnpm run setup` once to create the tables.
+3. Import the repo on [Netlify](https://www.netlify.com) and set `DATABASE_URL`, `DATABASE_AUTH_TOKEN`, `APP_PASSWORD` (locks the site), `CRON_SECRET` and any AI keys.
+4. The included scheduled function syncs the most overdue source every 30 minutes, within Netlify's function time limits.
+5. Keep running `pnpm run apply` on your computer; with `.env` pointing at Turso it sends what you approve on the hosted site.
 
 ## Scripts
 
 | Command | What it does |
 | --- | --- |
-| `npm run dev` | Run the app (creates or updates the database first) |
-| `npm run setup` | Create tables and the starter profile |
-| `npm run sync` | Fetch jobs from the terminal (add `-- --force` to ignore company-board intervals) |
-| `npm run apply` | Send approved applications |
-| `npm run apply:install` | Download the browser the runner uses (once) |
-| `npm test` | Unit and end-to-end tests with recorded API responses |
-| `npm run demo` / `npm run dev:demo` | Explore with sample data on port 3001 |
+| `pnpm run dev` | Run the app (creates or updates the database first) |
+| `pnpm run setup` | Create tables and a starter profile |
+| `pnpm run sync` | Fetch jobs from the terminal (`--force` ignores company-board intervals) |
+| `pnpm run apply` | Send approved applications (`--dry` to fill without submitting) |
+| `pnpm run apply:install` | Download the browser the runner uses (once) |
+| `pnpm test` | Run the test suite |
+| `pnpm run demo` / `pnpm run dev:demo` | Explore with sample data on port 3001 |
 
-## Project layout
+## Project structure
 
 ```
 src/app/            pages and server actions
-src/components/     UI
+src/components/     UI components
 src/lib/sources/    one adapter per job source
-src/lib/match/      scoring
+src/lib/match/      match scoring
 src/lib/skills/     skill dictionary and extraction
 src/lib/ai/         provider-agnostic AI client and prompts
 src/lib/insights.ts skill-gap analysis
-runner/             the apply runner (Playwright + email)
+runner/             apply runner (Playwright and email)
 tests/              tests and recorded API fixtures
+drizzle/            database migrations
 ```
 
-Job data belongs to each source; listings link back to the original posting as their terms require.
+## Contributing
+
+Issues and pull requests are welcome, especially new job sources, skills for the dictionary, and form-filling support for more applicant tracking systems. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE) © Aun Shahbaz Awan
